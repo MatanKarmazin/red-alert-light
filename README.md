@@ -28,12 +28,7 @@ A lightweight Node.js server designed to run 24/7 on a Raspberry Pi. It listens 
 
 
 3. **Configure your environment variables:**
-Copy the example environment file and add your actual Tuya credentials.
-    ```bash
-    cp .env.example .env
-    nano .env
-    ```
-
+Copy the example environment file and add your actual Tuya credentials.  
 *Do not share your `.env` file or upload it to GitHub!*
 
 ## ⚙️ Configuration (Setting your City/Zone)

@@ -1,0 +1,16 @@
+{
+  "name": "red-alert-light",
+  "version": "1.0.0",
+  "description": "Smart Home integration for Israel's Home Front Command Early Warnings",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "node test.js"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "@tuya/tuya-connector-nodejs": "^2.1.2",
+    "dotenv": "^16.4.5",
+    "ws": "^8.19.0"
+  }
+}

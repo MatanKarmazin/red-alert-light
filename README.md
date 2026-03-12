@@ -17,7 +17,7 @@ A lightweight Node.js server designed to run 24/7 on a Raspberry Pi. It listens 
 
 1. **Clone the repository:**
    ```bash
-   git clone [https://github.com/MatanKarmazin/red-alert-light.git](https://github.com/MatanKarmazin/red-alert-light.git)
+   git clone https://github.com/MatanKarmazin/red-alert-light.git
    cd red-alert-light
     ```
 

@@ -7,6 +7,7 @@ A lightweight Node.js server designed to run 24/7 on a Raspberry Pi. It listens 
 * **Instant Push Notifications:** Catches ephemeral "System Messages" that do not appear in the standard public API history.
 * **Highly Efficient:** Uses almost zero RAM or CPU. Perfect for running infinitely via PM2 on a Raspberry Pi or an old Android phone (via Termux).
 * **Hardware Integrated:** Native connection to the Tuya IoT Cloud API to trigger an emergency 10-second light blinking sequence.
+* **Auto-Reset:** Detects 'Incident Ended' (סיום אירוע) messages from the Home Front Command to automatically shut off the emergency lighting once the area is clear."
 
 ## 🛠️ Prerequisites
 1. **Node.js** installed on your machine/server.

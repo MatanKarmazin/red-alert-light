@@ -14,7 +14,7 @@ const DEVICE_ID = process.env.DEVICE_ID;
 let isTriggering = false; 
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-// --- 10-SECOND BLINK SEQUENCE ---
+// --- 10-SECOND BLINK SEQUENCE (DANGER) ---
 async function triggerAlarmSequence() {
   if (isTriggering) return; 
   isTriggering = true;
@@ -52,9 +52,25 @@ async function triggerAlarmSequence() {
   setTimeout(() => { isTriggering = false; }, 5000); 
 }
 
+// --- TURN OFF SEQUENCE (ALL CLEAR) ---
+async function turnLightOff() {
+  console.log(`\n[${new Date().toLocaleTimeString()}] 🟢 ALL CLEAR DETECTED! Turning LED OFF.`);
+  
+  try {
+    await tuya.request({
+      method: "POST",
+      path: `/v1.0/iot-03/devices/${DEVICE_ID}/commands`,
+      body: { commands: [{ code: "switch_led", value: false }] }
+    });
+    console.log(`[${new Date().toLocaleTimeString()}] 💡 Light successfully turned off.`);
+  } catch (error) {
+    console.error("❌ Tuya Turn Off Error:", error.message);
+  }
+}
+
 // --- WEBSOCKET CONNECTION ---
 function startSirenListener() {
-  console.log("🛡️ Starting Early Warning Listener...");
+  console.log("🛡️ Starting Early Warning & All Clear Listener...");
   
   const ws = new WebSocket("wss://ws.tzevaadom.co.il/socket?platform=WEB", {
     headers: {
@@ -64,7 +80,7 @@ function startSirenListener() {
   });
 
   ws.on('open', () => {
-    console.log("✅ Connected! Monitoring for Early Warnings in Dan/Shfela...");
+    console.log("✅ Connected! Monitoring zones: Dan, Shfela, Rishon LeZion...");
   });
 
   ws.on('message', (data) => {
@@ -79,15 +95,25 @@ function startSirenListener() {
             const title = payload.data.titleHe || "";
             const body = payload.data.bodyHe || "";
             
+            // Define the event types
             const isEarlyWarning = title.includes("התרעה מקדימה") || body.includes("בדקות הקרובות");
+            const isIncidentEnded = title.includes("סיום אירוע") || body.includes("האירוע הסתיים");
+            
+            // Check if the event is happening in your area
             const isMyArea = body.includes("דן") || 
                              body.includes("השפלה") || 
                              body.includes("שפלה") ||
                              body.includes("ראשון לציון");
 
-            if (isEarlyWarning && isMyArea) {
-                console.log(`\n[${new Date().toLocaleTimeString()}] 📡 Message Received: ${body}`);
-                triggerAlarmSequence();
+            // Execute the correct action
+            if (isMyArea) {
+                if (isEarlyWarning) {
+                    console.log(`\n[${new Date().toLocaleTimeString()}] 📡 Message Received: ${body}`);
+                    triggerAlarmSequence();
+                } else if (isIncidentEnded) {
+                    console.log(`\n[${new Date().toLocaleTimeString()}] 📡 Message Received: ${body}`);
+                    turnLightOff();
+                }
             }
         }
     } catch (err) {
